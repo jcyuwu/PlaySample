@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  DetailViewController.swift
 //  PlayseeSample
 //
 //  Created by jcyuwu on 2024/4/13.
@@ -8,7 +8,7 @@
 import UIKit
 import AVKit
 
-class ViewController: UIViewController {
+class DetailViewController: UIViewController {
     
     var collectionView:UICollectionView!
     
@@ -20,7 +20,6 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        resetCollectionView()
         self.playVisibleVideo()
     }
     
@@ -29,36 +28,10 @@ class ViewController: UIViewController {
         self.playVisibleVideo(false)
     }
     
-    func resetCollectionView() {
-        collectionView.isPagingEnabled = false
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        self.view.addSubview(collectionView)
-        
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        let horizontalConstraint = NSLayoutConstraint(item: collectionView!, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
-        let verticalConstraint = NSLayoutConstraint(item: collectionView!, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
-        let widthConstraint = NSLayoutConstraint(item: collectionView!, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1, constant: 0)
-        let heightConstraint = NSLayoutConstraint(item: collectionView!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1, constant: 0)
-        view.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
-    }
-    
     func setUpUI() {
-        let layout = UICollectionViewFlowLayout.init()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 0
-        layout.footerReferenceSize = .zero
-        layout.headerReferenceSize = .zero
-        collectionView = UICollectionView.init(frame: .zero, collectionViewLayout: layout)
-        collectionView.isScrollEnabled = true
         collectionView.isPagingEnabled = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.showsVerticalScrollIndicator = true
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(VideoCollectionViewCell.self, forCellWithReuseIdentifier: "VideoCollectionViewCell")
         
         //self.view.backgroundColor = .red
         //collectionView.backgroundColor = .blue
@@ -70,6 +43,14 @@ class ViewController: UIViewController {
         let widthConstraint = NSLayoutConstraint(item: collectionView!, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1, constant: 0)
         let heightConstraint = NSLayoutConstraint(item: collectionView!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1, constant: 0)
         view.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(back(_:)))
+    }
+    
+    @IBAction func back(_ sender: UIButton) {
+        self.dismiss(animated: false) {
+            
+        }
     }
     
     var dataSource:[String] = []
@@ -93,7 +74,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+extension DetailViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
@@ -108,23 +89,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 240)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.playVisibleVideo(false)
-        
-        let vc = DetailViewController()
-        vc.collectionView = self.collectionView
-        let nvc = UINavigationController(rootViewController: vc)
-        nvc.modalPresentationStyle = .fullScreen
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        nvc.navigationBar.standardAppearance = appearance
-        nvc.navigationBar.scrollEdgeAppearance = appearance
-        self.present(nvc, animated: false) {
-            
-        }
+        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -135,14 +100,14 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     }
 }
 
-extension ViewController: UIScrollViewDelegate {
+extension DetailViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         playVisibleVideo()
     }
 }
 
-extension ViewController {
+extension DetailViewController {
     
     func playVisibleVideo(_ shouldPlay:Bool = true) {
         // 1.
