@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVKit
 
 class VideoCollectionViewCell: UICollectionViewCell {
     
@@ -55,7 +56,7 @@ class VideoCollectionViewCell: UICollectionViewCell {
     
     func play() {
         if let url = url {
-            playerView.prepareToPlay(withUrl: url, shouldPlayImmediately: true)
+            playerView.prepareToPlay(withUrl: url, shouldPlayImmediately: true, player: nil)
         }
     }
     
@@ -63,9 +64,9 @@ class VideoCollectionViewCell: UICollectionViewCell {
         playerView.pause()
     }
     
-    func configure(_ videoUrl: String) {
+    func configure(_ videoUrl: String, player: AVPlayer?) {
         guard let url = URL(string: videoUrl) else { return }
         self.url = url
-        playerView.prepareToPlay(withUrl: url, shouldPlayImmediately: false)
+        playerView.prepareToPlay(withUrl: url, shouldPlayImmediately: false, player: player)
     }
 }

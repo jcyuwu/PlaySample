@@ -32,6 +32,12 @@ class PlayerView: UIView {
         }
     }
     
+    func getAssetPlayer() -> AVPlayer? {
+        return assetPlayer
+    }
+    
+    private var isExternalPlayer = false
+    
     private var playerItem:AVPlayerItem?
     private var urlAsset: AVURLAsset?
     
@@ -59,7 +65,7 @@ class PlayerView: UIView {
         }
     }
     
-    func prepareToPlay(withUrl url:URL, shouldPlayImmediately: Bool = false) {
+    func prepareToPlay(withUrl url:URL, shouldPlayImmediately: Bool = false, player: AVPlayer?) {
         guard !(self.url == url && assetPlayer != nil && assetPlayer?.error == nil) else {
             if shouldPlayImmediately {
                 play()
@@ -69,6 +75,10 @@ class PlayerView: UIView {
         
         cleanUp()
         
+        if (player != nil) {
+            isExternalPlayer = true
+            self.assetPlayer = player
+        }
         self.url = url
         
         let options = [AVURLAssetPreferPreciseDurationAndTimingKey : true]
@@ -106,7 +116,9 @@ class PlayerView: UIView {
             if status == .loaded(tracks) {
                 let item = AVPlayerItem(asset: asset)
                 self.playerItem = item
-                self.assetPlayer = AVPlayer(playerItem: item)
+                if self.assetPlayer == nil {
+                    self.assetPlayer = AVPlayer(playerItem: item)
+                }
                 self.didFinishLoading(self.assetPlayer, shouldPlayImmediately)
             }
         } else {
@@ -115,7 +127,9 @@ class PlayerView: UIView {
             if status == AVKeyValueStatus.loaded {
                 let item = AVPlayerItem(asset: asset)
                 self.playerItem = item
-                self.assetPlayer = AVPlayer(playerItem: item)
+                if self.assetPlayer == nil {
+                    self.assetPlayer = AVPlayer(playerItem: item)
+                }
                 self.didFinishLoading(self.assetPlayer, shouldPlayImmediately)
             }
         }
@@ -155,10 +169,12 @@ class PlayerView: UIView {
         }
     }
     
-    var isDeinit = false
+    private var isDeinit = false
     
     func cleanUp() {
-        pause()
+        if !isExternalPlayer {
+            pause()
+        }
         urlAsset?.cancelLoading()
         urlAsset = nil
         assetPlayer = nil
