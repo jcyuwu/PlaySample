@@ -96,15 +96,13 @@ class MusicTableViewCell: UITableViewCell {
         playerView.pause()
     }
     
-    func configure(_ videoUrl: String, player: AVPlayer?, thumbURL: String) {
+    func configure(_ videoUrl: String, player: AVPlayer?, thumb: UIImage?) {
         guard let url = URL(string: videoUrl) else { return }
         self.url = url
         playerView.prepareToPlay(withUrl: url, shouldPlayImmediately: false, player: player)
         textView.text = url.absoluteString
-        do {
-            let thumb = try Data(contentsOf: URL(string: thumbURL)!)
-            thumbView.image = UIImage(data: thumb)
-        } catch {
+        if let thumb {
+            thumbView.image = thumb
         }
     }
 }

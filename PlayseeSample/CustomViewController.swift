@@ -21,13 +21,14 @@ class CustomViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        setUpDataSource()
+        NotificationCenter.default.addObserver(self, selector: #selector(setUpDataSource), name: NSNotification.Name("requestOpenAPICallBack"), object: nil)
         self.playVisibleVideo()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.playVisibleVideo(false)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("requestOpenAPICallBack"), object: nil)
     }
     
     func setUpUI() {
@@ -56,8 +57,9 @@ class CustomViewController: UIViewController {
     ]
     var imageSource:[String] = [
     ]
+    var imageLocalSource:[String:UIImage] = [:]
     
-    func setUpDataSource() {
+    @objc func setUpDataSource() {
         tableView.reloadData()
     }
     
@@ -100,11 +102,47 @@ class CustomViewController: UIViewController {
                         print(mp3)
                         self.dataSource.append(mp3)
                     }
+                    
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: NSNotification.Name("requestOpenAPICallBack"), object: nil, userInfo: nil)
+                    }
                 } catch {
                     print(error)
                 }
             }
         }.resume()
+    }
+    
+    func requestDownloadImage(urlString: String) {
+        let url = URL(string: urlString)
+        var req: URLRequest?
+        if let url {
+            req = URLRequest(url: url)
+        }
+        var task: URLSessionDownloadTask?
+        if let req {
+            task = URLSession.shared.downloadTask(with: req, completionHandler: { location, response, error in
+                let key = req.url?.absoluteString
+                if let key {
+                    if let location {
+                        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                        print("File documentDirectory: \(documentDirectory)")
+                        let newFilePath = documentDirectory.appendingPathComponent(location.lastPathComponent+".jpg").path
+                        print("File downloaded to: \(newFilePath)")
+                        try? FileManager.default.moveItem(atPath: location.path, toPath: newFilePath)
+                        
+                        if let imageData = NSData(contentsOfFile: newFilePath) as Data? {
+                            self.imageLocalSource[key] = (UIImage(data: imageData))
+                            
+                            DispatchQueue.main.async {
+                                self.setUpDataSource()
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        task?.resume()
     }
 }
 
@@ -117,7 +155,10 @@ extension CustomViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MusicTableViewCell", for: indexPath) as? MusicTableViewCell else {
             return UITableViewCell()
         }
-        cell.configure(dataSource[indexPath.item], player: nil, thumbURL: imageSource[indexPath.row])
+        if imageLocalSource[imageSource[indexPath.row]] == nil {
+            requestDownloadImage(urlString: imageSource[indexPath.row])
+        }
+        cell.configure(dataSource[indexPath.item], player: nil, thumb: imageLocalSource[imageSource[indexPath.row]])
         return cell
     }
     
