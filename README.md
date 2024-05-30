@@ -1,8 +1,6 @@
 # PlayseeSample
 
-一個類Instagram影片播放的範例程式碼
-
-展示了三種視圖頁面
+一個類Instagram影片播放的範例程式碼，展示了三種視圖頁面
 
 影片的collection view，影片與文字的table view，聲音與圖文的table view
 
