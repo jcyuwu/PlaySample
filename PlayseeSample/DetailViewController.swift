@@ -43,6 +43,7 @@ class DetailViewController: UIViewController {
         collectionView.showsVerticalScrollIndicator = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(VideoCollectionViewCell.self, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+        collectionView.contentInsetAdjustmentBehavior = .never
 //        collectionView.isPagingEnabled = false
 //        collectionView.delegate = self
 //        collectionView.dataSource = self
