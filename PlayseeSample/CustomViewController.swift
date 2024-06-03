@@ -196,7 +196,8 @@ extension CustomViewController {
             // 3.
             for videoCell in videoCells {
                 let cell = videoCell as! MusicTableViewCell
-                if shouldPlay {
+                let visibility = checkVideoFrameVisibility(ofCell: cell)
+                if shouldPlay && visibility {
                     cell.play()
                 }
                 else {
@@ -204,5 +205,11 @@ extension CustomViewController {
                 }
             }
         }
+    }
+    
+    func checkVideoFrameVisibility(ofCell cell: MusicTableViewCell) -> Bool {
+        var cellRect = cell.contentView.bounds
+        cellRect = cell.contentView.convert(cell.contentView.bounds, to: tableView.superview)
+        return tableView.frame.contains(cellRect)
     }
 }

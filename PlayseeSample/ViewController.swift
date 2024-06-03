@@ -156,7 +156,8 @@ extension ViewController {
             // 3.
             for videoCell in videoCells {
                 let cell = videoCell as! VideoCollectionViewCell
-                if shouldPlay {
+                let visibility = checkVideoFrameVisibility(ofCell: cell)
+                if shouldPlay && visibility {
                     cell.play()
                 }
                 else {
@@ -164,5 +165,11 @@ extension ViewController {
                 }
             }
         }
+    }
+    
+    func checkVideoFrameVisibility(ofCell cell: VideoCollectionViewCell) -> Bool {
+        var cellRect = cell.contentView.bounds
+        cellRect = cell.contentView.convert(cell.contentView.bounds, to: collectionView.superview)
+        return collectionView.frame.contains(cellRect)
     }
 }

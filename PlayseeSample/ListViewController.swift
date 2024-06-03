@@ -133,7 +133,8 @@ extension ListViewController {
             // 3.
             for videoCell in videoCells {
                 let cell = videoCell as! VideoTableViewCell
-                if shouldPlay {
+                let visibility = checkVideoFrameVisibility(ofCell: cell)
+                if shouldPlay && visibility {
                     cell.play()
                 }
                 else {
@@ -141,5 +142,11 @@ extension ListViewController {
                 }
             }
         }
+    }
+    
+    func checkVideoFrameVisibility(ofCell cell: VideoTableViewCell) -> Bool {
+        var cellRect = cell.contentView.bounds
+        cellRect = cell.contentView.convert(cell.contentView.bounds, to: tableView.superview)
+        return tableView.frame.contains(cellRect)
     }
 }
