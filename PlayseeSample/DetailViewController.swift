@@ -31,13 +31,13 @@ class DetailViewController: UIViewController {
     func setUpUI() {
         let layout = UICollectionViewFlowLayout.init()
         layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 10
+        layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         layout.footerReferenceSize = .zero
         layout.headerReferenceSize = .zero
         collectionView = UICollectionView.init(frame: .zero, collectionViewLayout: layout)
         collectionView.isScrollEnabled = true
-        collectionView.isPagingEnabled = false
+        collectionView.isPagingEnabled = true
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.showsVerticalScrollIndicator = true
@@ -133,7 +133,8 @@ extension DetailViewController {
             // 3.
             for videoCell in videoCells {
                 let cell = videoCell as! VideoCollectionViewCell
-                if shouldPlay {
+                let visibility = checkVideoFrameVisibility(ofCell: cell)
+                if shouldPlay && visibility {
                     cell.play()
                 }
                 else {
@@ -141,5 +142,11 @@ extension DetailViewController {
                 }
             }
         }
+    }
+    
+    func checkVideoFrameVisibility(ofCell cell: VideoCollectionViewCell) -> Bool {
+        var cellRect = cell.contentView.bounds
+        cellRect = cell.contentView.convert(cell.contentView.bounds, to: collectionView.superview)
+        return collectionView.frame.contains(cellRect)
     }
 }
