@@ -14,10 +14,6 @@
 
 點擊單一cell可以進入觀看放大的播放，也可滑動至下一個cell，或退回cell列表
 
-反覆操作可以保持連貫的cell播放狀態
-
-透過覆用cell與AVPlayer，實現像Instagram流暢的影片播放
-
 前兩種視圖頁面使用線上影片來源位址
 
 最後的視圖頁面使用bandcamp的open api取得音樂來源位址與封面圖片
