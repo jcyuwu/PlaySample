@@ -1,4 +1,4 @@
-# PlayseeSample
+# PlaySample
 
 一個類Instagram多重影片播放的範例程式碼，展示了三種視圖頁面
 
