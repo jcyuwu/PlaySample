@@ -17,3 +17,11 @@
 前兩種視圖頁面使用線上影片來源位址
 
 最後的視圖頁面使用bandcamp的open api取得音樂來源位址與封面圖片
+
+<br/>
+
+<img src="https://github.com/jcyuwu/ios_sample_proj/blob/master/Simulator%20Screenshot%20-%20iPhone%2015%20Pro%20-%202025-04-02%20at%2009.48.48.png" width="30%" height="30%"> <img src="https://github.com/jcyuwu/ios_sample_proj/blob/master/Simulator%20Screenshot%20-%20iPhone%2015%20Pro%20-%202025-04-02%20at%2009.49.47.png" width="30%" height="30%">
+
+<img src="https://github.com/jcyuwu/ios_sample_proj/blob/master/Simulator%20Screenshot%20-%20iPhone%2015%20Pro%20-%202025-04-02%20at%2009.49.47.png" width="30%" height="30%"> <img src="https://github.com/jcyuwu/ios_sample_proj/blob/master/Simulator%20Screenshot%20-%20iPhone%2015%20Pro%20-%202025-04-02%20at%2009.49.47.png" width="30%" height="30%">
+
+
